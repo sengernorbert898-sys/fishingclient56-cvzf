@@ -19,7 +19,7 @@ Fabric Loom: 1.17.21
 
 /home/runner/work/fishingclient56-cvzf/fishingclient56-cvzf/reel-comfort/src/main/java/dev/reelcomfort/FishingHud.java:31: error: cannot find symbol
 > Task :compileJava
-		if (player == null || mc.options.hideGui || cfg == null) {
+		if (player == null || mc.options.hudHidden || cfg == null) {
 		                                ^
   symbol:   variable hideGui
   location: variable options of type Options
