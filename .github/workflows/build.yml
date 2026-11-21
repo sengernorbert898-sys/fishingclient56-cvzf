@@ -1,5 +1,7 @@
-name: build
-
+    name: Build
+      working-directory: reel-comfort
+        run: gradle build --no-daemon
+    
 on:
   push:
     branches: [main, master]
@@ -28,6 +30,13 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 9.6.0
+          
+  - name: Inspect Gradle directory layout
+  shell: bash
+  run: |
+    echo "PWD: $(pwd)"
+    ls -la
+    find . -maxdepth 4 \( -name "settings.gradle*" -o -name "build.gradle*" -o -name "gradlew" \) | sort
 
       - name: Build
         run: gradle build --no-daemon
