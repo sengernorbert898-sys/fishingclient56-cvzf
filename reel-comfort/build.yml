@@ -13,6 +13,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: reel-comfort
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,11 +27,17 @@ jobs:
           distribution: temurin
           java-version: 25
 
-      # No gradlew in the repo, so install Gradle directly.
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 9.6.0
+
+      - name: Inspect Gradle project
+        shell: bash
+        run: |
+          pwd
+          ls -la
+          ls build.gradle settings.gradle
 
       - name: Build
         run: gradle build --no-daemon
@@ -36,16 +46,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reel-comfort-jar
-          path: |
-            build/libs/*.jar
-            !build/libs/*-sources.jar
+          path: reel-comfort/build/libs/*.jar
           if-no-files-found: error
-
-      # Pushing a tag like v1.0.0 also attaches the jar to a GitHub release.
-      - name: Create release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            build/libs/*.jar
-            !build/libs/*-sources.jar
+          if: false
