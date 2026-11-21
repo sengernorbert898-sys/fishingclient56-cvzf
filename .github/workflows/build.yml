@@ -1,60 +1,51 @@
-    name: Build
-      working-directory: reel-comfort
-        run: gradle build --no-daemon
-    
-on:
-  push:
-    branches: [main, master]
-    tags: ['v*']
-  pull_request:
-  workflow_dispatch:
+Run gradle build --no-daemon
+  gradle build --no-daemon
+  shell: /usr/bin/bash -e {0}
+  env:
+    JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/25.0.5-8/x64
+    JAVA_HOME_25_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/25.0.5-8/x64
+    GRADLE_ACTION_ID: gradle/actions/setup-gradle
+    GRADLE_USER_HOME: /home/runner/.gradle
+    GRADLE_BUILD_ACTION_SETUP_COMPLETED: true
+    GRADLE_BUILD_ACTION_CACHE_RESTORED: true
+    DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
+    DEVELOCITY_INJECTION_CUSTOM_VALUE: gradle-actions
+    GITHUB_DEPENDENCY_GRAPH_ENABLED: false
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.6.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
 
-permissions:
-  contents: write
+> Configure project :
+Fabric Loom: 1.17.21
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+/home/runner/work/fishingclient56-cvzf/fishingclient56-cvzf/reel-comfort/src/main/java/dev/reelcomfort/FishingHud.java:31: error: cannot find symbol
+> Task :compileJava
+		if (player == null || mc.options.hideGui || cfg == null) {
+		                                ^
+  symbol:   variable hideGui
+  location: variable options of type Options
+1 error
 
-      - name: Set up Java 25
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 25
+> Task :compileJava FAILED
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795255436750.json
 
-      # No gradlew in the repo, so install Gradle directly.
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: 9.6.0
-          
-  - name: Inspect Gradle directory layout
-  shell: bash
-  run: |
-    echo "PWD: $(pwd)"
-    ls -la
-    find . -maxdepth 4 \( -name "settings.gradle*" -o -name "build.gradle*" -o -name "gradlew" \) | sort
 
-      - name: Build
-        run: gradle build --no-daemon
+[Incubating] Problems report is available at: file:///home/runner/work/fishingclient56-cvzf/fishingclient56-cvzf/reel-comfort/build/reports/problems/problems-report.html
+FAILURE: Build failed with an exception.
 
-      - name: Upload mod jar
-        uses: actions/upload-artifact@v4
-        with:
-          name: reel-comfort-jar
-          path: |
-            build/libs/*.jar
-            !build/libs/*-sources.jar
-          if-no-files-found: error
+1 actionable task: 1 executed
+* What went wrong:
+Execution failed for task ':compileJava' (registered by plugin class 'org.gradle.api.plugins.JavaBasePlugin').
+> Compilation failed; see the compiler output below.
+  /home/runner/work/fishingclient56-cvzf/fishingclient56-cvzf/reel-comfort/src/main/java/dev/reelcomfort/FishingHud.java:31: error: cannot find symbol
+  		if (player == null || mc.options.hideGui || cfg == null) {
+  		                                ^
+    symbol:   variable hideGui
+    location: variable options of type Options
+  1 error
 
-      # Pushing a tag like v1.0.0 also attaches the jar to a GitHub release.
-      - name: Create release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            build/libs/*.jar
-            !build/libs/*-sources.jar
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+BUILD FAILED in 28s
+Error: Process completed with exit code 1.
